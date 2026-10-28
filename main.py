@@ -1,0 +1,6 @@
+"""Convenience entry point after `pip install -e .`."""
+
+from mmfact.cli import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())

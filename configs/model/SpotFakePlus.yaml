@@ -1,0 +1,71 @@
+model:
+  name: SpotFakePlus
+  parameters:
+    text:
+      freeze: true
+      max_sentences: 50
+      max_length: 512
+      sentence_batch_size: 16
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    text_hidden: [1000, 500, 100]
+    image_hidden: [2000, 2000, 1000, 100]
+    fusion_hidden: [200, 100, 50]
+    dropout: 0.4
+  provenance:
+    paper: https://ojs.aaai.org/index.php/AAAI/article/view/7230
+    code: https://github.com/shiivangii/SpotFakePlus/tree/342d2e2f89ceabba676717d34c14fa5dc6f0faa6
+training:
+  seeds: [0, 42, 2026]
+  epochs: 100
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 0
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          language: zh
+        kernel_l2: 0.0001
+    training:
+      learning_rate: 0.0001
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          language: zh
+        kernel_l2: 0.0001
+    training:
+      learning_rate: 0.0001
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-uncased
+          revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+          language: en
+        kernel_l2: 0.01
+    training:
+      learning_rate: 0.0003

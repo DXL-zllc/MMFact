@@ -1,0 +1,87 @@
+model:
+  name: COOLANT
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: true
+      max_length: 200
+      output: tokens
+      mask_padding: false
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      stem_maxpool: true
+      center_crop: true
+    contrastive_image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: false
+      stem_maxpool: true
+      center_crop: true
+    cnn_channels: 32
+    cnn_kernels:
+    - 1
+    - 2
+    - 4
+    - 8
+    shared_dim: 128
+    projection_dim: 64
+    image_hidden_dim: 256
+    alignment_dim: 64
+    unimodal_dim: 16
+    classifier_dim: 64
+    attention_hidden_dim: 3
+    latent_dim: 2
+    dropout: 0.5
+    margin: 0.2
+    temperature: 0.07
+    semantic_weight: 0.1
+    guidance_weight: 0.5
+    normalization:
+      reference_size: 256
+      samples: 16
+      seed: 42
+      epsilon: 1.0e-06
+  provenance:
+    paper: https://arxiv.org/abs/2302.14057v2
+    code: https://github.com/wishever/COOLANT/tree/4dead9ba54423125cc535869efa3b28736c49b6a
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 50
+  batch_size: 64
+  eval_batch_size: 16
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 6
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        guidance_weight: 0.2

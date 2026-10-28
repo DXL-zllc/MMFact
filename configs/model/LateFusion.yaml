@@ -1,0 +1,94 @@
+model:
+  name: LateFusion
+  parameters:
+    text_peer:
+      text:
+        model_name: google-bert/bert-base-uncased
+        revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+        freeze: false
+        max_length: 512
+        output: cls
+        global_attention: null
+      head_hidden: []
+      head_dropout: 0.1
+    image_peer:
+      image:
+        architecture: resnet50
+        weights: IMAGENET1K_V1
+        freeze: false
+        output: avgpool
+        stem_maxpool: true
+        center_crop: true
+      head_hidden: []
+      head_dropout: 0.0
+    alpha_grid:
+    - 0.0
+    - 0.05
+    - 0.1
+    - 0.15
+    - 0.2
+    - 0.25
+    - 0.3
+    - 0.35
+    - 0.4
+    - 0.45
+    - 0.5
+    - 0.55
+    - 0.6
+    - 0.65
+    - 0.7
+    - 0.75
+    - 0.8
+    - 0.85
+    - 0.9
+    - 0.95
+    - 1.0
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 20
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 4
+  learning_rate: 0.0005
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups:
+    text:
+      learning_rate: 2.0e-05
+    image:
+      learning_rate: 0.0001
+    head:
+      learning_rate: 0.001
+  weight_decay_exclude_bias_norm: true
+  patience: 5
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+evaluation:
+  selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text_peer:
+          text:
+            model_name: google-bert/bert-base-chinese
+            revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+  weibo21:
+    model:
+      parameters:
+        text_peer:
+          text:
+            model_name: google-bert/bert-base-chinese
+            revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea

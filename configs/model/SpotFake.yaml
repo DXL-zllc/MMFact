@@ -1,0 +1,75 @@
+model:
+  name: SpotFake
+  parameters:
+    text:
+      freeze: true
+      output: cls
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    dropout: 0.3
+  provenance:
+    paper: https://precog.iiit.ac.in/pubs/SpotFake-IEEE_BigMM.pdf
+    code: https://github.com/shiivangii/SpotFake/tree/076a1f4706f5b8c0a8d8ae2f8db6bf5cedf4b138
+training:
+  seeds: [0, 42, 2026]
+  epochs: 20
+  batch_size: 256
+  eval_batch_size: 64
+  num_workers: 0
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+        text_hidden: [400, 32]
+        image_hidden: [32]
+        fusion_hidden: 64
+    training:
+      learning_rate: 0.0005
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+        text_hidden: [768, 32]
+        image_hidden: [32]
+        fusion_hidden: 35
+    training:
+      learning_rate: 0.001
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: allenai/longformer-base-4096
+          revision: 301e6a42cb0d9976a6d6a26a079fef81c18aa895
+          max_length: 4096
+          global_attention: cls
+        text_hidden: [768, 32]
+        image_hidden: [2742, 32]
+        fusion_hidden: 64
+    training:
+      learning_rate: 0.001

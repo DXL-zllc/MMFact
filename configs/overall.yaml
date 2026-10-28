@@ -1,0 +1,53 @@
+dataset:
+  name: weibo17
+  root: data/weibo17
+  splits:
+    train: train.jsonl
+    val: val.jsonl
+    test: test.jsonl
+  label_map:
+    real: 0
+    fake: 1
+    '0': 0
+    '1': 1
+  verify_images: true
+  hash_images: false
+
+model:
+  name: EANN
+  module: null
+  parameters: {}
+  provenance: {}
+
+preprocessing:
+  enabled: true
+  cache_dir: .cache/mmfact
+  batch_size: 64
+
+training:
+  seeds: [0, 42, 2026]
+  epochs: 100
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+
+evaluation:
+  selection_metric: macro_f1
+
+search:
+  parameters: {}
+
+output_dir: runs

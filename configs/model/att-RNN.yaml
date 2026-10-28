@@ -1,0 +1,70 @@
+model:
+  name: att-RNN
+  parameters:
+    text:
+      dimension: 300
+      window: 5
+      epochs: 5
+      seed: 42
+      max_length: 100
+      max_vocab_size: 20000
+      trainable: false
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    hidden_dim: 32
+    visual_dim: 512
+    attention_hidden: 512
+  provenance:
+    paper: https://doi.org/10.1145/3123266.3123454
+training:
+  seeds: [0, 42, 2026]
+  epochs: 100
+  batch_size: 128
+  eval_batch_size: 128
+  num_workers: 0
+  weight_decay: 0.0
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 20
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          language: zh
+    training:
+      learning_rate: 0.001
+      optimizer: adam
+      optimizer_parameters: {}
+  weibo21:
+    model:
+      parameters:
+        text:
+          language: zh
+    training:
+      learning_rate: 0.05
+      optimizer: sgd
+      optimizer_parameters:
+        momentum: 0.95
+        nesterov: false
+  gossipcop:
+    model:
+      parameters:
+        text:
+          language: en
+    training:
+      learning_rate: 0.05
+      optimizer: sgd
+      optimizer_parameters:
+        momentum: 0.9

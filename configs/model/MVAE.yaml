@@ -1,0 +1,80 @@
+model:
+  name: MVAE
+  parameters:
+    text:
+      dimension: 300
+      window: 5
+      epochs: 5
+      seed: 42
+      max_length: 100
+      max_vocab_size: 20000
+      trainable: false
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    hidden_dim: 32
+    image_hidden_dim: 1024
+    latent_dim: 64
+    sampling_std: 1.0
+    kl_reduction: mean
+    text_reconstruction_reduction: mean_per_token
+    classifier_l2: 0.0001
+  provenance:
+    paper: https://doi.org/10.1145/3308558.3313552
+    code: https://github.com/dhruvkhattar/MVAE/tree/159b180a76b516dffe95c2373209b7b5e282f563
+training:
+  seeds: [0, 42, 2026]
+  batch_size: 128
+  eval_batch_size: 128
+  num_workers: 0
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: plateau
+    monitor: classification
+    factor: 0.5
+    patience: 12
+    min_lr: 1.0e-07
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          language: zh
+        autoencoder_l2: 1.0e-05
+    training:
+      epochs: 200
+      learning_rate: 0.001
+      patience: 30
+  weibo21:
+    model:
+      parameters:
+        text:
+          language: zh
+        autoencoder_l2: 0.0001
+    training:
+      epochs: 200
+      learning_rate: 0.0015
+      patience: 30
+  gossipcop:
+    model:
+      parameters:
+        text:
+          language: en
+        autoencoder_l2: 0.0001
+    training:
+      epochs: 100
+      learning_rate: 0.003
+      patience: 20

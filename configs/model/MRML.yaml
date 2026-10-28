@@ -1,0 +1,71 @@
+model:
+  name: MRML
+  parameters:
+    text:
+      output: flatten
+      mask_padding: false
+      freeze: true
+      max_length: 50
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    hidden_dim: 1024
+    fusion_dim: 1024
+    classifier_dim: 64
+    rank: 2
+    dropout: 0.4
+    iteration_epochs: 2
+    triplet_margin: 0.2
+    pair_margin: 0.2
+    triplet_weight: 0.3
+    pair_weight: 0.5
+  provenance:
+    paper: https://doi.org/10.1109/ICASSP49357.2023.10096188
+    code: https://github.com/plw-study/MRML/tree/2726da30f2aca23d94f05a734bafc03909147bd9
+training:
+  seeds: [0, 42, 2026]
+  epochs: 300
+  batch_size: 128
+  eval_batch_size: 64
+  num_workers: 0
+  weight_decay: 0.0001
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 20
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+    training:
+      learning_rate: 2.0e-05
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+    training:
+      learning_rate: 2.0e-05
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-uncased
+          revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+    training:
+      learning_rate: 0.00025

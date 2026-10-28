@@ -1,0 +1,69 @@
+model:
+  name: EANN
+  parameters:
+    text:
+      dimension: 300
+      window: 5
+      epochs: 5
+      seed: 42
+      max_length: 100
+      max_vocab_size: 20000
+      trainable: true
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: logits
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    hidden_dim: 32
+    filter_num: 20
+    kernel_sizes: [1, 2, 3, 4]
+    event_source: metadata
+    event_clusters: 10
+    event_seed: 42
+  provenance:
+    paper: https://doi.org/10.1145/3219819.3219903
+training:
+  seeds: [0, 42, 2026]
+  epochs: 100
+  batch_size: 100
+  eval_batch_size: 100
+  num_workers: 0
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 100
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          language: zh
+        reverse_lambda: 0.1
+    training:
+      learning_rate: 0.001
+  weibo21:
+    model:
+      parameters:
+        text:
+          language: zh
+        reverse_lambda: 1.0
+    training:
+      learning_rate: 0.0003
+  gossipcop:
+    model:
+      parameters:
+        text:
+          language: en
+        reverse_lambda: 0.1
+    training:
+      learning_rate: 0.001

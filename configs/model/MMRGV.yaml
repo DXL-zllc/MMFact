@@ -1,0 +1,89 @@
+model:
+  name: MMRGV
+  parameters:
+    text:
+      encoder_preset: bert
+      freeze: false
+      output: tokens
+      mask_padding: true
+      max_length: 256
+    image:
+      encoder_preset: mae
+      freeze: false
+      center_crop: true
+      resize_size: 256
+      normalize: true
+      output: patches
+      image_size: 224
+      minimum_size: 0
+      augment: false
+    resources:
+      language: en
+      manifest: resources/gossipcop/mmrgv.jsonl
+      model: Qwen/Qwen2-VL-72B-Instruct
+      revision: 2ac26c967836fbb5729c709ad8f8b5548e1f88aa
+      max_tokens: 512
+    hidden_dim: 256
+    alignment_dim: 128
+    aggregation_layers: 2
+    temperature: 0.07
+    dropout: 0.1
+    correctness_weight: 1.0
+    judgment_weight: 1.0
+    correctness_alpha: 0.25
+    correctness_gamma: 2.0
+    classification_loss: focal
+    classification_alpha: 0.75
+    classification_gamma: 2.0
+  provenance:
+    paper: https://ojs.aaai.org/index.php/AAAI/article/view/36965
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 30
+  batch_size: 16
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 5.0e-05
+  weight_decay: 0.0001
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 5
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides:
+    alignment:
+      epochs: 5
+      patience: 5
+      selection_metric: loss
+      min_delta: 0.0
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        resources:
+          language: zh
+          manifest: resources/weibo17/mmrgv.jsonl
+        judgment_weight: 0.3
+        classification_loss: ce
+    training:
+      learning_rate: 2.0e-05
+      weight_decay: 0.0
+  weibo21:
+    model:
+      parameters:
+        resources:
+          language: zh
+          manifest: resources/weibo21/mmrgv.jsonl
+        dropout: 0.0
+        classification_loss: ce
+    training:
+      learning_rate: 2.0e-05
+      weight_decay: 0.0

@@ -1,0 +1,81 @@
+model:
+  name: HAMMER
+  parameters:
+    text:
+      model_name: google-bert/bert-base-multilingual-cased
+      revision: 3f076fdb1ab68d5b2880cb87a0886f315b8146f8
+      max_length: 128
+      max_words: 50
+      fusion_layer: 6
+    image:
+      model_name: facebook/deit-base-patch16-224
+      revision: fb2c78a54a5637dec350432794f7b93e31f910c9
+      image_size: 256
+    initialization:
+      checkpoint: materials/pretrained/hammer/ALBEF_4M.pth
+      language_adapted: true
+    auxiliary:
+      root: materials/auxiliary/dgm4
+      train: DGM4/metadata/train.json
+      val: DGM4/metadata/val.json
+    projection_dim: 256
+    queue_size: 65536
+    momentum: 0.995
+    temperature: 0.07
+    alpha: 0.4
+    loss_weights:
+      mac: 0.1
+      binary: 1.0
+      bbox_l1: 0.1
+      bbox_giou: 0.1
+      token: 1.0
+      multilabel: 1.0
+  provenance:
+    paper: https://openaccess.thecvf.com/content/CVPR2023/papers/Shao_Detecting_and_Grounding_Multi-Modal_Media_Manipulation_CVPR_2023_paper.pdf
+    code: https://github.com/rshaojimmy/MultiModal-DeepFake/tree/33fc04f3a1f550f923848737c864eea32556f699
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 10
+  batch_size: 32
+  eval_batch_size: 32
+  num_workers: 0
+  learning_rate: 2.0e-05
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: bf16
+  scheduler: null
+  stage_overrides:
+    dgm4_pretrain:
+      batch_size: 32
+      eval_batch_size: 32
+      epochs: 50
+      patience: 50
+      gradient_accumulation_steps: 8
+      learning_rate: 0.0001
+      weight_decay: 0.02
+      scheduler:
+        name: warmup_cosine
+        warmup_steps: 1000
+        warmup_start_lr: 1.0e-06
+        min_lr: 1.0e-05
+      selection_metric: macro_f1
+    news_finetune:
+      selection_metric: macro_f1
+dataset_overrides:
+  weibo21:
+    training:
+      weight_decay: 0.02

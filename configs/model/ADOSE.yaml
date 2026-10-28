@@ -1,0 +1,135 @@
+model:
+  name: ADOSE
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: true
+      output: embeddings
+      mask_padding: false
+      max_length: 100
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      freeze: true
+      output: avgpool
+      center_crop: true
+      stem_maxpool: true
+    hidden_dim: 256
+    image_hidden_dim: 1024
+    classifier_dim: 256
+    filter_num: 100
+    kernel_sizes:
+    - 3
+    - 4
+    - 5
+    dropout: 0.3
+    temperature: 0.5
+    threshold: 0.5
+    classifier_weight: 0.5
+    adversarial_weight: 0.2
+    contrastive_weight: 0.5
+    negotiation_weight: 0.2
+    reverse_lambda: 1.0
+    domains:
+      mode: metadata
+      num_domains: 4
+      language: en
+      seed: 42
+      max_features: 20000
+      max_labels: 1
+      ngram_range:
+      - 1
+      - 2
+      domain_names:
+      - Entertainment Works
+      - Lifestyle and Health
+      - Personal Relationships and Social Life
+      - Public Affairs, Career and Business
+      field: domain_4
+    active:
+      target_domain: 3
+      epochs:
+      - 6
+      - 8
+      - 10
+      - 12
+      - 14
+      ratio: 0.02
+      multiplier: 2
+      variances:
+        count: 51
+        min: 1.0e-10
+        max: 1.0
+      samples_per_variance: 10
+      chunk_size: 256
+      full_supervision: false
+  provenance:
+    paper: https://doi.org/10.1609/aaai.v40i24.39125
+    code: https://github.com/blue217/ADOSE/tree/f04ce4f23ceb3fe9dee2ef1262b74dd17caa9192
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 30
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.0005
+  optimizer: adam
+  optimizer_parameters:
+    amsgrad: true
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides:
+    curriculum:
+      epochs: 16
+      selection_metric: last
+    budgeted:
+      epochs: 6
+      selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        domains:
+          language: zh
+          domain_names:
+          - 公共治理与安全
+          - 文化与社会生活
+          - 科学健康与教育
+          - 财经商业
+        active:
+          multiplier: 5
+    training:
+      batch_size: 16
+      weight_decay: 0.0
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        adversarial_weight: 0.05
+        domains:
+          language: zh
+          domain_names:
+          - 公共治理与安全
+          - 文化与社会生活
+          - 科学健康与教育
+          - 财经商业
+        active:
+          multiplier: 5
+    training:
+      batch_size: 16

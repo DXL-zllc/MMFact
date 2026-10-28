@@ -1,0 +1,102 @@
+model:
+  name: C3N
+  parameters:
+    noun_count: 30
+    crop_count: 5
+    text:
+      normalize: false
+      noun_length: 20
+    image:
+      normalize: false
+      encoding_batch_size: 32
+      detector:
+        weights: COCO_V1
+        threshold: 0.5
+        duplicate_iou: 0.95
+    num_heads: 8
+    ffn_multiplier: 4
+    conv_channels: 64
+    conv_kernels: [1, 2, 3]
+    unimodal_dims: [256, 128, 64]
+    correlation_dims: [128, 64]
+    fusion_dims: [128, 64, 32]
+  provenance:
+    paper: https://doi.org/10.1016/j.ipm.2025.104120
+    code: https://github.com/cgao-comp/C3N/tree/e58ca49c502f550561d51f68ee198aee403ef3ac
+training:
+  seeds: [0, 42, 2026]
+  epochs: 30
+  batch_size: 16
+  eval_batch_size: 64
+  num_workers: 0
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          freeze: false
+          max_length: 200
+          language: zh
+        image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          freeze: false
+          pixel_cache: materials/.cache/c3n/pixels/weibo17
+        num_layers: 8
+        similarity_scale: 100.0
+        dropout: 0.1
+    training:
+      learning_rate: 2.0e-06
+      patience: 6
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          freeze: false
+          max_length: 200
+          language: zh
+        image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          freeze: false
+          pixel_cache: materials/.cache/c3n/pixels/weibo21
+        num_layers: 8
+        similarity_scale: 30.0
+        dropout: 0.0
+    training:
+      learning_rate: 2.0e-06
+      patience: 6
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: openai/clip-vit-base-patch16
+          revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+          freeze: true
+          max_length: 77
+          language: en
+        image:
+          model_name: openai/clip-vit-base-patch16
+          revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+          freeze: true
+        num_layers: 2
+        similarity_scale: 100.0
+        dropout: 0.2
+    training:
+      learning_rate: 6.0e-05
+      patience: 30

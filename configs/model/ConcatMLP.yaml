@@ -1,0 +1,85 @@
+model:
+  name: ConcatMLP
+  parameters:
+    text:
+      model_name: allenai/longformer-base-4096
+      revision: 301e6a42cb0d9976a6d6a26a079fef81c18aa895
+      freeze: false
+      max_length: 4096
+      output: cls
+      global_attention: cls
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      freeze: false
+      output: avgpool
+      stem_maxpool: true
+      center_crop: true
+    head_hidden:
+    - 512
+    head_dropout: 0.3
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 20
+  batch_size: 4
+  eval_batch_size: 4
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups:
+    text:
+      learning_rate: 2.0e-05
+    image:
+      learning_rate: 0.0001
+    head:
+      learning_rate: 0.001
+  weight_decay_exclude_bias_norm: true
+  patience: 5
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 8
+  precision: bf16
+  scheduler: null
+  stage_overrides: {}
+evaluation:
+  selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+    training:
+      batch_size: 32
+      eval_batch_size: 64
+      gradient_accumulation_steps: 1
+      precision: full
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+        head_hidden:
+        - 256
+        head_dropout: 0.2
+    training:
+      batch_size: 32
+      eval_batch_size: 64
+      weight_decay: 0.001
+      gradient_accumulation_steps: 1
+      precision: full

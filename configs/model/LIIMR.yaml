@@ -1,0 +1,71 @@
+model:
+  name: LIIMR
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: true
+      output: tokens
+      mask_padding: true
+      max_length: 512
+    regions: resources/gossipcop/liimr
+    hidden_dim: 256
+    filters: 512
+    heads: 16
+    feedforward_dim: 2048
+    image_activation: relu
+    beta: 0.5
+    dropout: 0.1
+    classifier_dropout: 0.0
+  provenance:
+    paper: https://doi.org/10.1145/3487553.3524650
+    reference_code: https://github.com/shiivangii/Leveraging-Intra-and-Inter-Modality-Relationship-for-Multimodal-Fake-News-Detection/tree/ce5b69b41895b7239c3707f8c75e233ad385062c
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 20
+  batch_size: 16
+  eval_batch_size: 32
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 6
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        regions: resources/weibo17/liimr
+        hidden_dim: 128
+        beta: 0.2
+        classifier_dropout: 0.4
+    training:
+      epochs: 30
+      learning_rate: 0.0003
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        regions: resources/weibo21/liimr
+        hidden_dim: 128
+        beta: 0.2
+        classifier_dropout: 0.4
+    training:
+      epochs: 30
+      learning_rate: 0.0003

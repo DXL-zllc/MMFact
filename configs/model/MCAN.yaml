@@ -1,0 +1,80 @@
+model:
+  name: MCAN
+  parameters:
+    text:
+      encoder_preset: bert
+      freeze: true
+      max_length: 200
+    image:
+      encoder_preset: resnet
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    frequency:
+      image_size: 224
+    hidden_dim: 256
+    num_heads: 4
+    ffn_dim: 512
+    classifier_hidden: 35
+    dropout: 0.5
+  provenance:
+    paper: https://aclanthology.org/2021.findings-acl.226/
+    code: https://github.com/wuyang45/MCAN_code/tree/989f7d6c053b84bf1992c003c5e045e3e850b232
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 16
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: true
+  patience: 10
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: linear_warmup
+    warmup_ratio: 0.1
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          freeze: false
+          max_length: 160
+        image:
+          freeze: false
+    training:
+      weight_decay: 0.15
+      optimizer: adabelief
+      optimizer_parameters:
+        eps: 1.0e-10
+        weight_decouple: true
+        rectify: false
+        print_change_log: false
+  weibo21:
+    model:
+      parameters:
+        text:
+          freeze: false
+          max_length: 160
+        image:
+          freeze: false
+    training:
+      weight_decay: 0.15
+      optimizer: adabelief
+      optimizer_parameters:
+        eps: 1.0e-10
+        weight_decouple: true
+        rectify: false
+        print_change_log: false

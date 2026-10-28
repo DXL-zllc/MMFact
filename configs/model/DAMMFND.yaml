@@ -1,0 +1,144 @@
+model:
+  name: DAMMFND
+  parameters:
+    text:
+      encoder_preset: bert
+      freeze: true
+      max_length: 197
+      output: tokens
+      mask_padding: false
+    image:
+      encoder_preset: mae
+      freeze: true
+      image_size: 224
+      minimum_size: 0
+      augment: false
+      center_crop: true
+      resize_size: 256
+      normalize: true
+    clip_text:
+      encoder_preset: clip
+      freeze: true
+      max_length: 77
+      normalize: true
+    clip_image:
+      encoder_preset: clip
+      freeze: true
+      normalize: true
+      square_resize: false
+    num_channels: 18
+    kernels:
+    - 1
+    - 2
+    - 3
+    - 5
+    - 10
+    cnn_channels: 64
+    multimodal_hidden: 348
+    multimodal_gate_hidden: 160
+    gate_dropout: 0.1
+    mask_hidden: 384
+    classifier_hidden: 384
+    dropout: 0.2
+    domain_rank: 32
+    num_heads: 8
+    ffn_dim: 2048
+    attention_dropout: 0.1
+    alpha_fnd: 0.25
+    alpha_domain: 0.25
+    alpha_semantic: 0.25
+    domains:
+      mode: metadata
+      num_domains: 8
+      language: en
+      seed: 3074
+      max_features: 20000
+      secondary_ratio: 0.8
+      max_labels: 2
+      ngram_range:
+      - 1
+      - 2
+      domain_names:
+      - Career Achievements and Business
+      - Everyday Life and Social Activity
+      - Fashion, Beauty and Lifestyle
+      - Film, Television and Variety Shows
+      - Health and Life Events
+      - Law and Public Affairs
+      - Music and Live Performance
+      - Relationships and Family
+      field: domains
+  provenance:
+    paper: https://ojs.aaai.org/index.php/AAAI/article/download/32036/34191
+    code: https://github.com/luweihai/DAMMFND/tree/ff73ba6cc4bd923c21fc13899018169e41fcf010
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 50
+  batch_size: 64
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  optimizer: adam
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: step
+    step_size: 100
+    gamma: 0.98
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        clip_text:
+          max_length: 52
+        domains:
+          num_domains: 9
+          language: zh
+          domain_names:
+          - 军事
+          - 医药健康
+          - 政治
+          - 教育考试
+          - 文体娱乐
+          - 灾难事故
+          - 社会生活
+          - 科技
+          - 财经商业
+    training:
+      learning_rate: 0.001
+      weight_decay: 0.0
+  weibo21:
+    model:
+      parameters:
+        clip_text:
+          max_length: 52
+        domains:
+          num_domains: 9
+          language: zh
+          domain_names:
+          - 军事
+          - 医药健康
+          - 政治
+          - 教育考试
+          - 文体娱乐
+          - 灾难事故
+          - 社会生活
+          - 科技
+          - 财经商业
+    training:
+      weight_decay: 5.0e-05

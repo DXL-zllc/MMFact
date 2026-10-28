@@ -1,0 +1,83 @@
+model:
+  name: ERIC-FND
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      output: cls
+      freeze: true
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    resources:
+      mode: nlin
+      max_entities: 10
+    description_length: 30
+    feature_dim: 128
+    alignment_dim: 64
+    classifier_dim: 64
+    dropout: 0.5
+    temperature: 1.0
+  provenance:
+    paper: https://ojs.aaai.org/index.php/AAAI/article/view/31977
+    code: https://github.com/Tarasom123/ERIC-FND/tree/a97fc89aa86e1736463d8ef3daa94919f6db3f1d
+training:
+  seeds: [0, 42, 2026]
+  epochs: 20
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.001
+  optimizer: adamw
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 20
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: cosine
+    min_lr: 0.0
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          max_length: 100
+        resources:
+          language: zh
+          manifest: resources/weibo17/nlin.jsonl
+        contrastive_weight: 0.5
+    training:
+      batch_size: 128
+      weight_decay: 0.0005
+  weibo21:
+    model:
+      parameters:
+        text:
+          max_length: 100
+        resources:
+          language: zh
+          manifest: resources/weibo21/nlin.jsonl
+        contrastive_weight: 1.0
+    training:
+      batch_size: 64
+      weight_decay: 0.0005
+  gossipcop:
+    model:
+      parameters:
+        text:
+          max_length: 200
+        resources:
+          language: en
+          manifest: resources/gossipcop/nlin.jsonl
+        contrastive_weight: 1.0
+    training:
+      batch_size: 128
+      weight_decay: 0.0

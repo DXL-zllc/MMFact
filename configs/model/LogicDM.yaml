@@ -1,0 +1,93 @@
+model:
+  name: LogicDM
+  parameters:
+    logic_variant: paper_hard_topq_v1
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: true
+      max_length: 150
+      output: tokens
+      mask_padding: true
+    syntax:
+      model_name: en_core_web_sm
+      model_version: 3.8.0
+      language: en
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      image_size: 224
+      grid_size: 7
+      patch_batch_size: 128
+    dimension: 200
+    image_hidden: 500
+    image_layer_norm_eps: 1.0e-05
+    gcn_layers: 2
+    gcn_layer_norm_eps: 1.0e-05
+    evaluated_layers:
+    - 2
+    top_k: 5
+    correlations: 10
+    clause_rate: 0.1
+    logic_dropout: 0.2
+    pair_chunk_size: 1024
+  provenance:
+    paper: https://aclanthology.org/2023.findings-acl.620/
+    code: https://github.com/less-and-less-bugs/LogicMD/tree/06824ef2edf33ec069eade2a95d42444327aaa06
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 20
+  batch_size: 32
+  eval_batch_size: 32
+  num_workers: 0
+  learning_rate: 2.0e-05
+  weight_decay: 0.0001
+  optimizer: adam
+  optimizer_parameters:
+    amsgrad: true
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 20
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: plateau
+    monitor: validation.accuracy
+    factor: 0.1
+    patience: 5
+    min_lr: 0.0
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        syntax:
+          model_name: zh_core_web_sm
+          language: zh
+        correlations: 15
+    training:
+      learning_rate: 0.0001
+      weight_decay: 0.0005
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        syntax:
+          model_name: zh_core_web_sm
+          language: zh
+        clause_rate: 0.15
+    training:
+      epochs: 40
+      learning_rate: 0.0001
+      weight_decay: 0.0005
+      patience: 40

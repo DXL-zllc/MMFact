@@ -1,0 +1,80 @@
+model:
+  name: HMCAN
+  parameters:
+    text:
+      freeze: true
+      max_length: 20
+      output: layer_groups
+      mask_padding: true
+      layer_groups:
+      - [1, 2, 3, 4]
+      - [5, 6, 7, 8]
+      - [9, 10, 11, 12]
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      freeze: true
+      output: spatial
+      grid_size: 4
+      center_crop: true
+      stem_maxpool: true
+    self_layers: 2
+    context_layers: 2
+    num_heads: 12
+    ffn_dim: 768
+    classifier_hidden: 256
+    layer_norm_eps: 1.0e-06
+    transformer_init_std: 0.01
+    implementation: author
+  provenance:
+    paper: https://doi.org/10.1145/3404835.3462871
+    code: https://github.com/wangjinguang502/HMCAN/tree/9f56f71e9a6e1eb0ebc822d67a95ba408d4a0c4c
+training:
+  seeds: [0, 42, 2026]
+  epochs: 60
+  batch_size: 128
+  eval_batch_size: 128
+  num_workers: 0
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        dropout: 0.3
+        alpha: 0.7
+    training:
+      learning_rate: 0.0003
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        dropout: 0.1
+        alpha: 0.9
+    training:
+      learning_rate: 0.0003
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-uncased
+          revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+        dropout: 0.1
+        alpha: 0.7
+    training:
+      learning_rate: 0.001

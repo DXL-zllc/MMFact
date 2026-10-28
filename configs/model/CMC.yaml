@@ -1,0 +1,120 @@
+model:
+  name: CMC
+  parameters:
+    text:
+      encoder_preset: bert
+      language: en
+      max_length: 120
+      max_sentences: 5
+      freeze: false
+    image:
+      encoder_preset: resnet
+      freeze: false
+      flip_probability: 0.5
+      center_crop: true
+      stem_maxpool: true
+    image_classifier_dims: []
+    image_classifier_dropout: 0.0
+    crd:
+      dim: 128
+      num_negatives: 1000
+      temperature: 0.07
+      momentum: 0.5
+      weight: 0.3
+      epsilon: 1.0e-12
+    fusion:
+      name: block
+      mm_dim: 256
+      chunks: 18
+      rank: 15
+      input_dropout: 0.1
+  provenance:
+    paper: https://doi.org/10.1109/ICASSP43922.2022.9747280
+    code: https://github.com/Doraemonzm/CMC/tree/6912f78c8d3e54e9a1809ddc95134ef71a7752a7
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 30
+  batch_size: 16
+  eval_batch_size: 32
+  num_workers: 0
+  learning_rate: 2.0e-05
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 6
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides:
+    mutual_distillation:
+      selection_metric: macro_f1
+      min_delta: 0.0
+      parameter_groups:
+        image:
+          optimizer: sgd
+          optimizer_parameters:
+            momentum: 0.9
+          learning_rate: 0.0001
+          weight_decay: 0.0005
+        text:
+          learning_rate: 2.0e-05
+          weight_decay: 0.0
+    fusion:
+      selection_metric: macro_f1
+      min_delta: 0.0
+      batch_size: 32
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          language: zh
+          max_length: 250
+          max_sentences: 1
+        image_classifier_dims:
+        - 4096
+        - 4096
+        image_classifier_dropout: 0.5
+        crd:
+          num_negatives: 1500
+    training:
+      batch_size: 32
+      stage_overrides:
+        mutual_distillation:
+          parameter_groups:
+            image:
+              learning_rate: 0.0003
+            text:
+              learning_rate: 1.0e-05
+  weibo21:
+    model:
+      parameters:
+        text:
+          language: zh
+          max_length: 250
+          max_sentences: 1
+        image_classifier_dims:
+        - 4096
+        - 4096
+        image_classifier_dropout: 0.5
+        crd:
+          num_negatives: 1500
+          weight: 0.5
+    training:
+      batch_size: 32
+      stage_overrides:
+        mutual_distillation:
+          parameter_groups:
+            image:
+              learning_rate: 0.0003

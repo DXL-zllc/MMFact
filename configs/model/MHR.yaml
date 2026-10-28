@@ -1,0 +1,91 @@
+model:
+  name: MHR
+  parameters:
+    text:
+      output: cls
+      freeze: true
+    image:
+      model_name: facebook/vit-mae-base
+      revision: 25b184bea5538bf5c4c852c79d221195fdd2778d
+      freeze: true
+      image_size: 224
+      minimum_size: 0
+      augment: false
+      center_crop: true
+      normalize: true
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+      resize_size: 256
+    hidden_dim: 512
+    graph:
+      reference_size: 256
+      neighbors: 8
+  provenance:
+    paper: https://doi.org/10.1109/TKDE.2025.3528951
+    code: https://github.com/guoxinyu0617/MHR/tree/fb92a020f8716044443a15175b615b1c49c0794c
+training:
+  seeds: [0, 42, 2026]
+  epochs: 5000
+  eval_batch_size: 256
+  num_workers: 0
+  optimizer: riemannian_adam
+  optimizer_parameters:
+    betas: [0.9, 0.999]
+    eps: 1.0e-08
+    amsgrad: false
+    stabilize: 10
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 500
+  device: cpu
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+        dim: 64
+        num_layers: 3
+        dropout: 0.0
+    training:
+      batch_size: 1024
+      learning_rate: 0.0006
+      weight_decay: 0.0
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+        dim: 64
+        num_layers: 2
+        dropout: 0.0
+    training:
+      batch_size: 256
+      learning_rate: 0.0006
+      weight_decay: 0.0
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: allenai/longformer-base-4096
+          revision: 301e6a42cb0d9976a6d6a26a079fef81c18aa895
+          max_length: 4096
+          global_attention: cls
+        dim: 32
+        num_layers: 3
+        dropout: 0.2
+    training:
+      batch_size: 256
+      learning_rate: 0.0003
+      weight_decay: 0.001

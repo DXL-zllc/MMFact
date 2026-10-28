@@ -1,0 +1,102 @@
+model:
+  name: MMFN
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: false
+      max_length: 300
+      output: tokens
+      mask_padding: true
+    image:
+      model_name: facebook/vit-mae-base
+      revision: 25b184bea5538bf5c4c852c79d221195fdd2778d
+      freeze: false
+      center_crop: true
+      resize_size: 256
+      normalize: true
+      output: patches
+      image_size: 224
+      minimum_size: 1
+      augment: false
+    clip_text:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      max_length: 77
+      normalize: false
+      output: pooled
+    clip_image:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      normalize: false
+      output: pooled
+    resources:
+      language: en
+      manifest: resources/mmfn/en.jsonl
+    attention_dim: 512
+    num_heads: 8
+    ffn_dim: 2048
+    hidden_dim: 256
+    projection_dim: 16
+    classifier_dim: 48
+    attention_dropout: 0.1
+    branch_dropout: 0.1
+    projection_dropout: 0.1
+    layer_norm_eps: 1.0e-05
+  provenance:
+    paper: https://arxiv.org/abs/2304.00827v1
+    code: https://github.com/zhouyangming/MMFN-fake-news-detection/tree/f52d0eb8fb4bc739a0d4fe9a5f4f341bf975bde6
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 16
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0003
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups:
+    backbone:
+      learning_rate: 1.0e-05
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        resources:
+          language: zh
+          manifest: resources/mmfn/zh.jsonl
+        projection_dropout: 0.3
+    training:
+      learning_rate: 0.002
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        resources:
+          language: zh
+          manifest: resources/mmfn/zh.jsonl
+    training:
+      learning_rate: 0.001

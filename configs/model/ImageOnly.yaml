@@ -1,0 +1,56 @@
+model:
+  name: ImageOnly
+  parameters:
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      freeze: false
+      output: avgpool
+      stem_maxpool: true
+      center_crop: true
+    head_hidden: []
+    head_dropout: 0.0
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 20
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0005
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups:
+    image:
+      learning_rate: 5.0e-05
+    head:
+      learning_rate: 0.0005
+  weight_decay_exclude_bias_norm: true
+  patience: 5
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+evaluation:
+  selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    training:
+      learning_rate: 0.001
+      parameter_groups:
+        image:
+          learning_rate: 0.0001
+        head:
+          learning_rate: 0.001
+  weibo21:
+    training:
+      epochs: 40

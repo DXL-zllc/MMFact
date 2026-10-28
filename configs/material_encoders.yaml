@@ -1,0 +1,20 @@
+# Opt-in material profile. Existing published model presets stay independently usable.
+shared_v1:
+  datasets: [weibo17, weibo21, gossipcop]
+  document:
+    encoder_preset: document
+    models:
+      TextPLM: [text]
+      ConcatMLP: [text]
+      LateFusion: [text_peer.text]
+      SpotFake: [text]
+      CAFE: [text]
+      MHR: [text]
+  description: >-
+    Shared dataset-specific document CLS for ordinary semantic-vector branches.
+    Weibo uses Chinese BERT with 512 tokens; GossipCop uses Longformer with 4096
+    tokens and global CLS attention. Freeze policies, heads, losses and training
+    remain method-specific. Layer groups, static embeddings, pair inputs,
+    sentence/token-specialized methods and resource-owned encoders retain their
+    published MMFact recipe. This is a shared-input adaptation, not a numerical
+    reproduction of the original paper.

@@ -1,0 +1,72 @@
+# Paths are relative to the Hub repository and materials_root, respectively.
+repo_id: PNemo/MMFact
+revision: 40caa16d6621c020c49d0422d5e153ef822a9266
+datasets: [weibo17, weibo21, gossipcop]
+common:
+  - data/train/metadata.jsonl
+  - data/validation/metadata.jsonl
+  - data/test/metadata.jsonl
+  - labels/vocabulary.json
+  - feature_catalog.json
+  - training/catalog.json
+  - indexes/text_rows.jsonl
+  - indexes/image_rows.jsonl
+  - indexes/image_files.jsonl
+# Matrix values, masks, row indexes and training resources come from the catalogs.
+# These are additional semantic inputs that are not represented by a matrix consumer.
+requirements:
+  safe: [annotations/images.jsonl, annotations/texts.jsonl, indexes/safe_caption_rows.jsonl]
+  aar: [methods/aar/*]
+  em_fend:
+    - annotations/texts.jsonl
+    - annotations/images.jsonl
+    - annotations/pairs.jsonl
+    - annotations/entities/*
+    - annotations/encyclopedia.jsonl
+  nlin:
+    - annotations/texts.jsonl
+    - annotations/images.jsonl
+    - annotations/pairs.jsonl
+    - annotations/entities/*
+    - annotations/encyclopedia.jsonl
+  mmfn: [annotations/texts.jsonl, annotations/images.jsonl, annotations/pairs.jsonl]
+  mmcan: [annotations/texts.jsonl, annotations/pairs.jsonl]
+  liimr: [features/regions/roi36/*]
+  c3n: [annotations/nouns.jsonl, inputs/crops/five_crop_boxes/*]
+  event_radar:
+    - annotations/schema.json
+    - annotations/event_roles.jsonl
+    - annotations/emotions.jsonl
+    - annotations/objects.jsonl
+    - features/text/event_radar_tokens/*
+    - features/regions/event_radar_objects/*
+    - inputs/frequency/block_dct_168/*
+  eric_fnd: [annotations/texts.jsonl, annotations/encyclopedia.jsonl, methods/eric_fnd/*]
+  mmrgv: [methods/mmrgv/*, annotations/images.jsonl]
+  nslm: [methods/nslm/*]
+# Reuse existing CLIP matrices through their published catalog consumers.
+feature_sources:
+  clipsvm:
+    - {method: CLIPLinear, input: text_encoder}
+    - {method: CLIPLinear, input: image_encoder}
+  nlin:
+    - {method: FND-CLIP, input: clip_text_encoder}
+    - {method: FND-CLIP, input: clip_image_encoder}
+dataset_requirements:
+  c3n:
+    gossipcop: [features/c3n/text_nouns/*, features/c3n/image_crops/*]
+prepared_image_roles:
+  event_radar: [image]
+  c3n: [image]
+external:
+  rdcm:
+    - name: ImageNet classifier initialization
+      directory: pretrained/torch/hub/checkpoints
+      url: https://download.pytorch.org/models/resnet50-0676ba61.pth
+  hammer:
+    - name: ALBEF initialization
+      directory: pretrained/hammer
+      url: https://github.com/salesforce/ALBEF
+    - name: DGM4 auxiliary data
+      directory: auxiliary/dgm4
+      url: https://github.com/rshaojimmy/MultiModal-DeepFake

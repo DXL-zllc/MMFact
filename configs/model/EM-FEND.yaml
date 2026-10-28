@@ -1,0 +1,88 @@
+model:
+  name: EM-FEND
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: false
+      max_length: 256
+      output: tokens
+      mask_padding: true
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      center_crop: true
+      stem_maxpool: true
+      output: spatial
+      freeze: false
+      grid_size: 7
+    resources:
+      language: en
+      manifest: data/gossipcop/em_fend.jsonl
+      producer_revision: baidu-resource-adapted-v1
+    hidden_dim: 256
+    num_heads: 8
+    ffn_dim: 1024
+    entity_max_length: 32
+    dropout: 0.3
+  provenance:
+    paper: https://doi.org/10.1145/3474085.3481548
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 8
+  batch_size: 8
+  eval_batch_size: 8
+  num_workers: 0
+  learning_rate: 0.0003
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups:
+    backbone:
+      learning_rate: 2.0e-05
+  weight_decay_exclude_bias_norm: false
+  patience: 4
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 8
+  precision: bf16
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        resources:
+          language: zh
+          manifest: data/weibo17/em_fend.jsonl
+        dropout: 0.1
+    training:
+      epochs: 100
+      batch_size: 16
+      eval_batch_size: 16
+      learning_rate: 0.001
+      patience: 10
+      gradient_accumulation_steps: 4
+      precision: full
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        resources:
+          language: zh
+          manifest: data/weibo21/em_fend.jsonl
+    training:
+      epochs: 100
+      batch_size: 16
+      eval_batch_size: 16
+      patience: 10
+      gradient_accumulation_steps: 4
+      precision: full

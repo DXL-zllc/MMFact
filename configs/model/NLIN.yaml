@@ -1,0 +1,170 @@
+model:
+  name: NLIN
+  parameters:
+    backbone:
+      model_name: google/flan-t5-base
+      revision: 7bcac572ce56db69c1ea7c8af255c5d7c9672fc2
+    context:
+      max_words: 200
+      max_length: 512
+      allocation: component_waterfill_v1
+    lora:
+      rank: 8
+      alpha: 16
+      dropout: 0.0
+    mapping:
+      blocks: 2
+      prompts: 16
+      heads: 8
+      dropout: 0.1
+    clip_text:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      normalize: false
+      output: pooled
+      max_length: 77
+    clip_image:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      normalize: false
+      output: pooled
+      square_resize: false
+    resources:
+      language: en
+      manifest: resources/gossipcop/nlin.jsonl
+      tools:
+        caption:
+          name: BLIP
+          revision: 82a37760796d32b1411fe092ab5d4e227313294b
+          weights: Salesforce/blip-image-captioning-base
+          settings:
+            max_new_tokens: 64
+            num_beams: 3
+            do_sample: false
+        dense:
+          name: VinVL
+          revision: vinvl-vg-x152c4
+          weights: vinvl_vg_x152c4.pth
+          settings:
+            object_threshold: 0.2
+            attribute_threshold: 0.1
+            max_objects: 100
+        ocr:
+          name: EasyOCR
+          revision: 1.7.2
+          settings:
+            languages:
+            - en
+            paragraph: false
+            detail: 1
+        linker:
+          name: TagMe
+          revision: unversioned-remote-service
+          settings:
+            language: en
+            rho_threshold: 0.3
+            long_text: 3
+        knowledge:
+          name: Wikidata
+          revision: current-at-generation-record-actual-lastrevid
+          settings:
+            language: en
+            wikipedia_language: en
+        translation:
+          name: identity
+          revision: '1'
+          settings: {}
+  provenance:
+    paper: https://www.ijcai.org/proceedings/2024/0281.pdf
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 60
+  batch_size: 8
+  eval_batch_size: 16
+  num_workers: 0
+  learning_rate: 0.0002
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 60
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 2
+  precision: full
+  scheduler:
+    name: linear_warmup
+    warmup_ratio: 0.1
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        clip_text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          max_length: 52
+        clip_image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+        resources:
+          language: zh
+          manifest: resources/weibo17/nlin.jsonl
+          tools:
+            ocr:
+              settings:
+                languages:
+                - ch_sim
+                - en
+            translation:
+              name: MarianMT
+              revision: cf109095479db38d6df799875e34039d4938aaa6
+              settings:
+                max_length: 512
+                num_beams: 4
+                do_sample: false
+              weights: Helsinki-NLP/opus-mt-zh-en
+    training:
+      learning_rate: 0.0005
+  weibo21:
+    model:
+      parameters:
+        lora:
+          rank: 16
+          alpha: 32
+        clip_text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          max_length: 52
+        clip_image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+        resources:
+          language: zh
+          manifest: resources/weibo21/nlin.jsonl
+          tools:
+            ocr:
+              settings:
+                languages:
+                - ch_sim
+                - en
+            translation:
+              name: MarianMT
+              revision: cf109095479db38d6df799875e34039d4938aaa6
+              settings:
+                max_length: 512
+                num_beams: 4
+                do_sample: false
+              weights: Helsinki-NLP/opus-mt-zh-en
+    training:
+      learning_rate: 0.0005

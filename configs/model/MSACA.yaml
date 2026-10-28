@@ -1,0 +1,69 @@
+model:
+  name: MSACA
+  parameters:
+    text:
+      encoder_preset: bert
+      output: tokens
+      mask_padding: false
+      freeze: true
+      max_length: 512
+    image:
+      encoder_preset: resnet
+      freeze: true
+      scales:
+      - 224
+      - 112
+      - 56
+    cnn_channels: 128
+    cnn_kernels:
+    - 1
+    - 2
+    - 4
+    - 8
+    alignment_dim: 64
+    image_hidden_dim: 256
+    unimodal_dim: 16
+    attention_hidden_dims:
+    - 64
+    - 16
+    classifier_dim: 64
+    dropout: 0.5
+    alpha: 0.3
+  provenance:
+    paper: https://doi.org/10.1145/3626772.3657905
+    code: https://github.com/kingdommm/MSACA_pytorch/tree/2ea8a21c69e1a53a689114e59a08212a42c5e115
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 64
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0005
+  weight_decay: 1.0e-05
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 100
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          max_length: 200
+        alpha: 0.03
+  weibo21:
+    model:
+      parameters:
+        text:
+          max_length: 200
+        alpha: 0.1

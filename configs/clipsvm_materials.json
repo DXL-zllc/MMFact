@@ -1,0 +1,171 @@
+{
+  "repo_id": "PNemo/MMFact",
+  "revision": "40caa16d6621c020c49d0422d5e153ef822a9266",
+  "files": [
+    {
+      "path": "datasets/gossipcop/data/test/metadata.jsonl",
+      "bytes": 7276067,
+      "sha256": "208786699d8a02c0672c16e276b8522bbc87b44caafe9a250b78895c3c0d274a"
+    },
+    {
+      "path": "datasets/gossipcop/data/train/metadata.jsonl",
+      "bytes": 34483416,
+      "sha256": "420237637c4c8ba758942839219ed5e7c741449c368534066eaa467ddf55c302"
+    },
+    {
+      "path": "datasets/gossipcop/data/validation/metadata.jsonl",
+      "bytes": 7251172,
+      "sha256": "541ec251e0debfa5f3dd03dc1314c4379efd2a3c8c31e36ce478977a2763bb63"
+    },
+    {
+      "path": "datasets/gossipcop/feature_catalog.json",
+      "bytes": 51485,
+      "sha256": "7768670d824827c05898d7f647fbd066ccae95c53c549a1855f5b99ba6f2e973"
+    },
+    {
+      "path": "datasets/gossipcop/features/clip/clip_image_unit512.npy",
+      "bytes": 24604800,
+      "sha256": "edfb44a4dda288c1b1adfd9983d06c1137cd7d512249302b16f0663630436909"
+    },
+    {
+      "path": "datasets/gossipcop/features/clip/clip_text_unit512.npy",
+      "bytes": 25858176,
+      "sha256": "0d33a86357b55ac13acd18c6006704ecb50bd4918170b5ef4f4e34bef6ba9da8"
+    },
+    {
+      "path": "datasets/gossipcop/indexes/image_files.jsonl",
+      "bytes": 2465995,
+      "sha256": "fe3ac195da5194e9b42dfc45a28af9c9334eafb21c0720c05da78f4d641892dd"
+    },
+    {
+      "path": "datasets/gossipcop/indexes/image_rows.jsonl",
+      "bytes": 1094178,
+      "sha256": "64a6ebf3648d396b507136e00879aa44661d8595aa5d01bed68b37407477b99f"
+    },
+    {
+      "path": "datasets/gossipcop/indexes/text_rows.jsonl",
+      "bytes": 1137856,
+      "sha256": "85541aab188b15e230bf26cd0ff7613fda8ceeffdf714d597740fb14e1b54640"
+    },
+    {
+      "path": "datasets/gossipcop/labels/vocabulary.json",
+      "bytes": 887,
+      "sha256": "f9b15eeff52ffe9e4e8ecb432b9cbee1d6b8709e0b8179980e545ff31d26b379"
+    },
+    {
+      "path": "datasets/gossipcop/training/catalog.json",
+      "bytes": 3702,
+      "sha256": "8a1ab0bc8718f107da1e9a58e94c13cdfdf68771720a16dbeceddb0bfaa1f5e5"
+    },
+    {
+      "path": "datasets/weibo17/data/test/metadata.jsonl",
+      "bytes": 1162147,
+      "sha256": "7cb2efd6ca052192dfdda9d8aae3ef29d56919662873e1fe63e42e2831f408e0"
+    },
+    {
+      "path": "datasets/weibo17/data/train/metadata.jsonl",
+      "bytes": 4651691,
+      "sha256": "e3584cfa70df94312c10fe4c0fcaea4281f618589f8947bac4437339283fa758"
+    },
+    {
+      "path": "datasets/weibo17/data/validation/metadata.jsonl",
+      "bytes": 680444,
+      "sha256": "41993d96259d188b245c41a1e6f2688e3c81f80d91083bd819dbad5ca8143a61"
+    },
+    {
+      "path": "datasets/weibo17/feature_catalog.json",
+      "bytes": 38367,
+      "sha256": "f61e5c9eb4020117fb531d3c43beab4d296e0b72840ab9a69bdd0d4afb9fb493"
+    },
+    {
+      "path": "datasets/weibo17/features/clip/chinese_clip_image_unit512.npy",
+      "bytes": 15804544,
+      "sha256": "3bb83fba8f144125a3e7d6c8d9951ef191c5e96b2155bcf520290d2882b24095"
+    },
+    {
+      "path": "datasets/weibo17/features/clip/chinese_clip_text_unit512.npy",
+      "bytes": 15511680,
+      "sha256": "fbf8455fc72ef6aa08e63e6cd08541b66806891318f80103993652dd6fa99eb4"
+    },
+    {
+      "path": "datasets/weibo17/indexes/image_files.jsonl",
+      "bytes": 1578379,
+      "sha256": "180e9af480bec9695ec08bd2f403cf1ffe5084af64eb8651f6a93d11fef2a7d7"
+    },
+    {
+      "path": "datasets/weibo17/indexes/image_rows.jsonl",
+      "bytes": 701137,
+      "sha256": "a80dd301958d9be3b9287e2c6b164a6cfac004c40c8b4238c23a232dd1a70b24"
+    },
+    {
+      "path": "datasets/weibo17/indexes/text_rows.jsonl",
+      "bytes": 680550,
+      "sha256": "72d78d7017584f717061b9ea4db9bff6fa3008d10b9b0e311c3211b929fe5e37"
+    },
+    {
+      "path": "datasets/weibo17/labels/vocabulary.json",
+      "bytes": 607,
+      "sha256": "2fdd5f21a1f79f321a0bae44e4fbd6e145a40614410ab2fac8986f51d0d85110"
+    },
+    {
+      "path": "datasets/weibo17/training/catalog.json",
+      "bytes": 3702,
+      "sha256": "1b08e30a9559f402228c58c698a0b30b52cd9261bb673c482659bdb6ee20b243"
+    },
+    {
+      "path": "datasets/weibo21/data/test/metadata.jsonl",
+      "bytes": 527379,
+      "sha256": "fb08519e00904f9b1f0736a4fa8f3b1cc886514a110d718f41ad895a2f6107d9"
+    },
+    {
+      "path": "datasets/weibo21/data/train/metadata.jsonl",
+      "bytes": 4150378,
+      "sha256": "13fe2ec97cc29af1e79f1e312af062fc4330bb2fb340ee69a2d99dbe316bf172"
+    },
+    {
+      "path": "datasets/weibo21/data/validation/metadata.jsonl",
+      "bytes": 525713,
+      "sha256": "5d5b9964454444f77068eedc393b890e02c5c04b1929c78f73e5632e1023dbec"
+    },
+    {
+      "path": "datasets/weibo21/feature_catalog.json",
+      "bytes": 38367,
+      "sha256": "34968722ff344f011f81830a4de5ab9fc9737c144be6408be3351baafd987a48"
+    },
+    {
+      "path": "datasets/weibo21/features/clip/chinese_clip_image_unit512.npy",
+      "bytes": 12036224,
+      "sha256": "5fdf47db4ac61bae937f3aef6287171b355da1f4ec9d659bec64b0e1bc06f918"
+    },
+    {
+      "path": "datasets/weibo21/features/clip/chinese_clip_text_unit512.npy",
+      "bytes": 12306560,
+      "sha256": "da7175c7d941e87fbf3619236922bb59be1a59dc631b6d94c2380b6d014342f7"
+    },
+    {
+      "path": "datasets/weibo21/indexes/image_files.jsonl",
+      "bytes": 1202126,
+      "sha256": "5bea67566d0fe34fe0922f8349c3b9bdcea29e8f3ee7015ae48329afa25614aa"
+    },
+    {
+      "path": "datasets/weibo21/indexes/image_rows.jsonl",
+      "bytes": 533697,
+      "sha256": "6ac31c9dcd13a382168be59260f5835e461be84a0be51e6eace1f885233364b6"
+    },
+    {
+      "path": "datasets/weibo21/indexes/text_rows.jsonl",
+      "bytes": 539700,
+      "sha256": "a7c213c16879cca94de2dd4b2a7637ea4e4b2b9662e7222eb77d8e28b654b6c0"
+    },
+    {
+      "path": "datasets/weibo21/labels/vocabulary.json",
+      "bytes": 607,
+      "sha256": "2fdd5f21a1f79f321a0bae44e4fbd6e145a40614410ab2fac8986f51d0d85110"
+    },
+    {
+      "path": "datasets/weibo21/training/catalog.json",
+      "bytes": 3702,
+      "sha256": "b19276e5547e5f61967a6acb9fe30ff9391af31cdc4fc8974c9864974b490076"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+model:
+  name: NSLM
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: false
+      output: tokens
+      mask_padding: true
+      max_length: 512
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      freeze: false
+      output: avgpool
+      center_crop: true
+      stem_maxpool: true
+    frequency:
+      image_size: 224
+    frequency_size: 299
+    feature_dim: 256
+    latent_dim: 256
+    context_length: 64
+    dropout: 0.1
+    logic_weight: 0.5
+    temperature: 1.0
+    inference_steps: 16
+    inference_seed: 42
+    resources:
+      manifest: resources/nslm/reverse_evidence.jsonl
+  provenance:
+    paper: https://doi.org/10.1609/aaai.v38i8.28677
+    code: https://github.com/hedongxiao-tju/NSLM/tree/7f1ce28ac85916a6eca9d065bfcf4aa743fdd8f0
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 20
+  batch_size: 16
+  eval_batch_size: 16
+  num_workers: 0
+  learning_rate: 3.0e-05
+  weight_decay: 0.0
+  optimizer: adamw
+  optimizer_parameters:
+    eps: 1.0e-08
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 8
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: linear_warmup
+    warmup_ratio: 0.0
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-multilingual-cased
+          revision: 3f076fdb1ab68d5b2880cb87a0886f315b8146f8
+          max_length: 256
+        resources:
+          manifest: resources/weibo17/nslm_reverse_evidence.jsonl
+    training:
+      learning_rate: 1.0e-05
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-multilingual-cased
+          revision: 3f076fdb1ab68d5b2880cb87a0886f315b8146f8
+          max_length: 256
+        logic_weight: 0.1
+        resources:
+          manifest: resources/weibo21/nslm_reverse_evidence.jsonl
+    training:
+      learning_rate: 1.0e-05

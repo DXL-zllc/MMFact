@@ -1,0 +1,70 @@
+model:
+  name: CAFE
+  parameters:
+    text:
+      encoder_preset: document
+      freeze: true
+    image:
+      encoder_preset: resnet
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+      output: avgpool
+    text_dim: 256
+    image_dim: 512
+    alignment_dim: 64
+    latent_dim: 2
+    classifier_dim: 64
+    margin: 0.1
+    beta: 0.5
+    normalization:
+      reference_size: 256
+      seed: 42
+      epsilon: 1.0e-06
+      method: gauss_hermite
+      orders:
+      - 5
+      - 9
+      - 17
+      - 33
+      - 65
+      rtol: 1.0e-05
+      atol: 1.0e-10
+  provenance:
+    paper: https://doi.org/10.1145/3485447.3511968
+    code: https://github.com/cyxanna/CAFE/tree/75610c746982d2d9deb8127834707e6f831da3a4
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 50
+  batch_size: 64
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 3.0e-05
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        margin: 0.2
+    training:
+      learning_rate: 0.0003
+  weibo21:
+    model:
+      parameters:
+        margin: 0.0
+    training:
+      learning_rate: 0.0001

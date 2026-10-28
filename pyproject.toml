@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mmfact"
+version = "0.1.0"
+description = "A configurable research toolbox for multimodal misinformation detection"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.2", "PyYAML>=6.0", "Pillow>=10.0", "numpy>=1.24"]
+
+[project.optional-dependencies]
+hub = ["huggingface_hub>=0.36,<3"]
+models = [
+    "torchvision>=0.17",
+    "timm>=1.0.30,<1.1",
+    "transformers>=4.40,<5",
+    "gensim>=4.4,<5",
+    "jieba>=0.42.1",
+    "scikit-learn>=1.4",
+    "scipy>=1.10",
+    "sentencepiece>=0.2",
+    "protobuf>=4.25",
+    "adabelief-pytorch>=0.2.1",
+    "geoopt==0.5.1",
+    "peft==0.17.1",
+    "accelerate==1.10.1",
+    "nltk>=3.9,<4",
+    "opencc-python-reimplemented==0.1.7",
+    "opencv-python-headless>=4.10,<5",
+    "spacy>=3.8,<3.9",
+]
+
+[project.scripts]
+mmfact = "mmfact.cli:main"
+
+[tool.setuptools]
+packages = [
+    "mmfact",
+    "mmfact.models_classification",
+    "mmfact.data",
+    "mmfact.evaluation",
+    "mmfact.materials",
+    "mmfact.configs",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
+"mmfact.configs" = "configs"
+
+[tool.setuptools.package-data]
+"mmfact.configs" = ["*.yaml", "*.json", "dataset/*.yaml", "model/*.yaml"]

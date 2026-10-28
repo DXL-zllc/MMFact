@@ -1,0 +1,59 @@
+model:
+  name: TFIDFLogistic
+  parameters:
+    language: en
+    tfidf:
+      ngram_range:
+      - 1
+      - 2
+      max_features: 50000
+      min_df: 1
+      max_df: 1.0
+      sublinear_tf: true
+      smooth_idf: true
+      norm: l2
+      lowercase: true
+    logistic:
+      penalty: l2
+      solver: liblinear
+      C: 10.0
+      tol: 0.0001
+      max_iter: 1000
+      fit_intercept: true
+      intercept_scaling: 1.0
+      class_weight: null
+      dual: false
+      warm_start: false
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+evaluation:
+  selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        language: zh
+  weibo21:
+    model:
+      parameters:
+        language: zh

@@ -1,0 +1,82 @@
+model:
+  name: TextPLM
+  parameters:
+    text:
+      model_name: allenai/longformer-base-4096
+      revision: 301e6a42cb0d9976a6d6a26a079fef81c18aa895
+      freeze: false
+      max_length: 4096
+      output: cls
+      global_attention: cls
+    head_hidden: []
+    head_dropout: 0.1
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 10
+  batch_size: 2
+  eval_batch_size: 2
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups:
+    text:
+      learning_rate: 2.0e-05
+    head:
+      learning_rate: 2.0e-05
+  weight_decay_exclude_bias_norm: true
+  patience: 3
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 8
+  precision: bf16
+  scheduler:
+    name: linear_warmup
+    warmup_ratio: 0.1
+  stage_overrides: {}
+evaluation:
+  selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+    training:
+      epochs: 20
+      batch_size: 32
+      eval_batch_size: 32
+      parameter_groups:
+        head:
+          learning_rate: 0.001
+      patience: 5
+      gradient_accumulation_steps: 1
+      scheduler: null
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          max_length: 512
+          global_attention: null
+    training:
+      batch_size: 32
+      eval_batch_size: 32
+      parameter_groups:
+        text:
+          learning_rate: 5.0e-05
+        head:
+          learning_rate: 0.0005
+      gradient_accumulation_steps: 1

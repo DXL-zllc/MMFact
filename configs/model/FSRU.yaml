@@ -1,0 +1,63 @@
+model:
+  name: FSRU
+  parameters:
+    text:
+      encoder_preset: word2vec
+      max_length: 32
+      max_vocab_size: 20000
+      language: en
+      trainable: true
+    image:
+      image_size: 224
+      minimum_size: 0
+      center_crop: true
+      resize_size: 256
+      normalize: true
+    hidden_dim: 256
+    patch_size: 16
+    num_layers: 1
+    num_filters: 2
+    dropout: 0.15
+    full_temperature: 0.05
+    self_temperature: 0.05
+    alpha: 0.2
+    beta: 0.2
+  provenance:
+    paper: https://doi.org/10.1609/aaai.v38i16.29803
+    reference_code: https://github.com/dm4m/FSRU/tree/2b939cca1e07ed31d6c3ba113d8b616844a35e2e
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 50
+  batch_size: 64
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          max_length: 50
+          language: zh
+  weibo21:
+    model:
+      parameters:
+        text:
+          max_length: 50
+          language: zh
+        num_filters: 4

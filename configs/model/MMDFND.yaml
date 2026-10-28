@@ -1,0 +1,153 @@
+model:
+  name: MMDFND
+  parameters:
+    text:
+      encoder_preset: bert
+      freeze: true
+      max_length: 197
+      output: tokens
+      mask_padding: false
+    image:
+      encoder_preset: mae
+      freeze: true
+      image_size: 224
+      minimum_size: 0
+      augment: false
+      center_crop: true
+      resize_size: 256
+      normalize: true
+    clip_text:
+      encoder_preset: clip
+      freeze: true
+      max_length: 77
+      normalize: true
+      output: pooled
+    clip_image:
+      encoder_preset: clip
+      freeze: true
+      normalize: true
+      square_resize: false
+      output: pooled
+    domains:
+      mode: metadata
+      num_domains: 8
+      language: en
+      seed: 3074
+      max_features: 20000
+      ngram_range:
+      - 1
+      - 2
+      domain_names:
+      - Career Achievements and Business
+      - Everyday Life and Social Activity
+      - Fashion, Beauty and Lifestyle
+      - Film, Television and Variety Shows
+      - Health and Life Events
+      - Law and Public Affairs
+      - Music and Live Performance
+      - Relationships and Family
+    num_specific: 6
+    num_shared: 6
+    kernels:
+    - 1
+    - 2
+    - 3
+    - 5
+    - 10
+    cnn_channels: 64
+    domain_dim: 768
+    gate_hidden: 768
+    multimodal_hidden: 348
+    multimodal_gate_hidden: 160
+    classifier_hidden: 384
+    gate_dropout: 0.1
+    projection_dropout: 0.1
+    classifier_dropout: 0.2
+    pivot_tokens: 4
+    pivot_rounds: 4
+    pivot_heads: 4
+    pivot_ffn_multiplier: 4
+    pivot_dropout: 0.6
+    pivot_attention_dropout: 0.0
+    pivot_readout_dropout: 0.2
+    final_heads: 8
+    final_gate_hidden:
+    - 720
+    - 160
+    adain_hidden: 768
+    adain_epsilon: 2.3e-08
+    alpha: 0.15
+  provenance:
+    paper: https://doi.org/10.1145/3664647.3681317
+    code: https://github.com/yutchina/MMDFND/tree/a8a79b776845fc684d0269f5341235c0b1ea5c02
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 50
+  batch_size: 64
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 5.0e-05
+  optimizer: adam
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 20
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler:
+    name: step
+    step_size: 100
+    gamma: 0.98
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        clip_text:
+          max_length: 52
+        domains:
+          num_domains: 9
+          language: zh
+          domain_names:
+          - 军事
+          - 医药健康
+          - 政治
+          - 教育考试
+          - 文体娱乐
+          - 灾难事故
+          - 社会生活
+          - 科技
+          - 财经商业
+    training:
+      patience: 5
+  weibo21:
+    model:
+      parameters:
+        clip_text:
+          max_length: 52
+        domains:
+          num_domains: 9
+          language: zh
+          domain_names:
+          - 军事
+          - 医药健康
+          - 政治
+          - 教育考试
+          - 文体娱乐
+          - 灾难事故
+          - 社会生活
+          - 科技
+          - 财经商业
+    training:
+      batch_size: 32
+      patience: 3

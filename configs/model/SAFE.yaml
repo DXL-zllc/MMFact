@@ -1,0 +1,75 @@
+model:
+  name: SAFE
+  parameters:
+    text:
+      dimension: 300
+      max_vocab_size: 50000
+      sif_a: 0.001
+      pc_count: 1
+    lengths:
+      headline: 30
+      body: 100
+      caption: 20
+    shared_dim: 32
+    filter_num: 128
+    output_dim: 32
+    kernel_sizes: [3, 4]
+    epsilon: 1.0e-07
+    implementation: paper
+  provenance:
+    paper: https://arxiv.org/abs/2003.04981v1
+training:
+  seeds: [0, 42, 2026]
+  epochs: 100
+  batch_size: 64
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0003
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 15
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          language: zh
+          tokenization: jieba
+          vector_path: resources/cc.zh.300.vec
+        caption_manifest: resources/captions/zh.jsonl
+        dropout: 0.3
+        loss_weights: [0.4, 0.6]
+    training:
+      weight_decay: 0.0001
+  weibo21:
+    model:
+      parameters:
+        text:
+          language: zh
+          tokenization: jieba
+          vector_path: resources/cc.zh.300.vec
+        caption_manifest: resources/captions/zh.jsonl
+        dropout: 0.3
+        loss_weights: [0.6, 0.4]
+    training:
+      weight_decay: 0.0001
+  gossipcop:
+    model:
+      parameters:
+        text:
+          language: en
+          tokenization: author
+          vector_path: resources/glove.840B.300d.txt
+        caption_manifest: resources/captions/en.jsonl
+        dropout: 0.5
+        loss_weights: [0.4, 0.6]
+    training:
+      weight_decay: 0.0

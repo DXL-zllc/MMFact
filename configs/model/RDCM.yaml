@@ -1,0 +1,92 @@
+model:
+  name: RDCM
+  parameters:
+    text:
+      freeze: true
+      output: embeddings
+      mask_padding: false
+      max_length: 100
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      freeze: true
+      output: avgpool
+      center_crop: true
+      stem_maxpool: true
+    hidden_dim: 256
+    text_hidden_dim: 256
+    image_hidden_dim: 1024
+    classifier_dim: 256
+    filter_num: 100
+    kernel_sizes: [3, 4, 5]
+    dropout: 0.3
+    kernel_sigmas: [2, 4, 8, 16]
+    temperature: 0.5
+    domains:
+      mode: metadata
+      num_domains: 3
+      max_labels: 1
+      seed: 42
+      max_features: 20000
+      ngram_range: [1, 2]
+      field: domain_3
+  provenance:
+    paper: https://doi.org/10.1109/TIFS.2023.3326368
+    code: https://github.com/less-and-less-bugs/RDCM/tree/5e3320769ef666b443b13eaf13b86ec24197589e
+training:
+  seeds: [0, 42, 2026]
+  epochs: 30
+  batch_size: 96
+  eval_batch_size: 96
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.0005
+  optimizer: adam
+  optimizer_parameters:
+    amsgrad: true
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        threshold: 0.9
+        inter_weight: 0.1
+        contrastive_weight: 0.5
+        domains:
+          language: zh
+          domain_names: [公共治理与安全, 文化与社会生活, 科学教育、健康与经济]
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        threshold: 0.9
+        inter_weight: 0.1
+        contrastive_weight: 0.5
+        domains:
+          language: zh
+          domain_names: [公共治理与安全, 文化与社会生活, 科学教育、健康与经济]
+  gossipcop:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-uncased
+          revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+        threshold: 0.7
+        inter_weight: 0.005
+        contrastive_weight: 0.005
+        domains:
+          language: en
+          domain_names: [Entertainment Works, Personal Life, 'Public Affairs, Career and Business']

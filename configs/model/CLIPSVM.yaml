@@ -1,0 +1,108 @@
+model:
+  name: CLIPSVM
+  module: mmfact.models_classification.clipsvm
+  parameters:
+    feature_source:
+      model: CLIPLinear
+      text_role: text_encoder
+      image_role: image_encoder
+      mode: prepared_only
+      dtype: float64
+      fusion: concat_text_then_image
+      post_concat_normalization: false
+    text:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      normalize: true
+      output: pooled
+      max_length: 77
+    image:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      normalize: true
+      output: pooled
+      square_resize: false
+    svm:
+      C: 0.2
+      penalty: l2
+      loss: squared_hinge
+      dual: false
+      tol: 0.0001
+      max_iter: 20000
+      fit_intercept: true
+      intercept_scaling: 1.0
+      class_weight: balanced
+    calibration:
+      method: sigmoid
+      n_splits: 5
+      shuffle: true
+      seed_source: training_seed
+      ensemble: false
+      n_jobs: 1
+  provenance:
+    method_type: project_defined_supervised_baseline
+    reference_baselines:
+    - CLIPLinear
+    - CLIPMLP
+    - TFIDFLogistic
+    repository_revision: 4b0e352a3d68cbf9e149dda4ed180e7dea91b0cb
+    materials_repo: PNemo/MMFact
+    materials_revision: 40caa16d6621c020c49d0422d5e153ef822a9266
+    implementation: paired_global_linear_svm_sigmoid_v1
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 1
+  batch_size: 512
+  eval_batch_size: 512
+  num_workers: 0
+  learning_rate: 0.001
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 1
+  device: cpu
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+evaluation:
+  selection_metric: macro_f1
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          max_length: 52
+        image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+        svm:
+          C: 0.5
+          class_weight: null
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          max_length: 52
+        image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+        svm:
+          class_weight: null
+preprocessing:
+  enabled: true
+  mode: prepared
+  layout: hub
+  batch_size: 512

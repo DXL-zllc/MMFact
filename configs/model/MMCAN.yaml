@@ -1,0 +1,83 @@
+model:
+  name: MMCAN
+  parameters:
+    shared_materials: true
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: true
+      max_length: 512
+      output: tokens
+      mask_padding: true
+    image:
+      model_name: facebook/vit-mae-base
+      revision: 25b184bea5538bf5c4c852c79d221195fdd2778d
+      image_size: 224
+      center_crop: true
+      resize_size: 256
+      normalize: true
+      freeze: true
+      output: patches
+      minimum_size: 1
+      augment: false
+    matching:
+      directory: null
+      language: en
+      translation_manifest: null
+      max_length: 40
+    num_heads: 8
+    encoder_layers: 1
+    coattention_layers: 1
+    encoder_ffn_dim: 512
+    matching_dim: 64
+    classifier_hidden: 256
+    dropout: 0.4
+    kl_weight: 0.01
+    layer_norm_eps: 1.0e-12
+  provenance:
+    paper: https://doi.org/10.1016/j.ins.2024.120310
+    code: https://github.com/ZhaozwTD/MMCAN/tree/128658157a238a9230b600d51227fb95aba531e4
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 80
+  batch_size: 64
+  eval_batch_size: 32
+  num_workers: 0
+  learning_rate: 0.0003
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        matching:
+          language: zh
+    training:
+      learning_rate: 0.0001
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+        matching:
+          language: zh
+        kl_weight: 0.05
+    training:
+      learning_rate: 0.0001

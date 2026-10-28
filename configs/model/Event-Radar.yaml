@@ -1,0 +1,96 @@
+model:
+  name: Event-Radar
+  parameters:
+    text:
+      encoder_preset: clip
+      freeze: true
+      output: tokens
+      mask_padding: true
+      normalize: false
+      max_length: 77
+    image:
+      encoder_preset: clip
+      freeze: true
+      normalize: false
+      output: pooled
+      encoding_batch_size: 32
+      square_resize: false
+    resources:
+      language: en
+      manifest: resources/event_radar/en.jsonl
+      max_objects: 36
+    embedding_dim: 64
+    view_dim: 32
+    graph:
+      num_layers: 2
+      adjacency_weight: 0.6
+      dropout: 0.1
+      branch_state: separate
+    pattern:
+      image_size: 168
+      patch_size: 24
+      dim: 64
+      depth: 3
+      heads: 8
+      attention_dropout: 0.5
+      residual_dropout: 0.5
+      pool_dropout: 0.1
+    fusion:
+      heads: 4
+      dropout: 0.1
+      classifier: linear
+    credible_weight: 0.4
+    contrastive_weight: 0.2
+    contrastive_temperature: 0.5
+  provenance:
+    paper: https://aclanthology.org/2024.acl-long.316/
+    code: https://github.com/mazihan880/Event-Radar/tree/499eb3142dd2705e990c1ac97b8e6ff64d7003bd
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 4
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 1.0e-06
+  optimizer: adam
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 0.0001
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          max_length: 52
+        resources:
+          language: zh
+          manifest: resources/event_radar/zh.jsonl
+        contrastive_weight: 0.1
+    training:
+      learning_rate: 5.0e-05
+  weibo21:
+    model:
+      parameters:
+        text:
+          max_length: 52
+        resources:
+          language: zh
+          manifest: resources/event_radar/zh.jsonl
+        contrastive_weight: 0.4
+    training:
+      learning_rate: 5.0e-05

@@ -1,0 +1,84 @@
+model:
+  name: AAR
+  parameters:
+    text:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      max_length: 77
+      output: tokens
+      normalize: false
+      mask_padding: true
+    image:
+      model_name: openai/clip-vit-base-patch16
+      revision: 57c216476eefef5ab752ec549e440a49ae4ae5f3
+      freeze: true
+      output: tokens
+      normalize: false
+      square_resize: false
+    resources:
+      language: en
+      manifest: resources/aar/en.jsonl
+    attention_heads: 8
+    classifier_hidden: 256
+    dropout: 0.3
+    fusion_weight: 0.5
+    reasoning_weight: 0.5
+  provenance:
+    paper: https://aclanthology.org/2025.coling-main.526/
+    code: https://github.com/qingpingwan/AAR/tree/74ee412bc88db38c00d7506e2265096d6c70a649
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 40
+  batch_size: 32
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          max_length: 512
+        image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+        resources:
+          language: zh
+          manifest: resources/aar/zh.jsonl
+        dropout: 0.4
+    training:
+      learning_rate: 0.0002
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+          max_length: 512
+        image:
+          model_name: OFA-Sys/chinese-clip-vit-base-patch16
+          revision: 36e679e65c2a2fead755ae21162091293ad37834
+        resources:
+          language: zh
+          manifest: resources/aar/zh.jsonl
+        dropout: 0.5
+    training:
+      learning_rate: 0.0003

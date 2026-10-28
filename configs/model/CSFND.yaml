@@ -1,0 +1,85 @@
+model:
+  name: CSFND
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      cleaning: english
+      freeze: true
+      output: tokens
+      mask_padding: true
+      max_length: 27
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      output: avgpool
+      freeze: true
+      center_crop: true
+      stem_maxpool: true
+    clusters: 17
+    kmeans_seed: 1
+    kmeans_n_init: 10
+    dimension: 128
+    context_hidden: 512
+    heads: 8
+    feedforward_dim: 256
+    dropout: 0.5
+    neighbors: all
+    resource_batch_size: 128
+    warmup_epochs: 10
+    context_margin: 0.5
+    class_margin: 0.2
+    triplet_weight: 0.6
+    intra_weight: 0.2
+  provenance:
+    paper: https://doi.org/10.1016/j.ipm.2023.103564
+    reference_code: https://github.com/plw-study/CSFND/tree/59c6ee43d693038d71b109925a8f303167940cc5
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 128
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 10
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides:
+    context:
+      selection_metric: last
+      min_delta: 0.0
+      epochs: 100
+    local:
+      learning_rate: 0.0001
+      weight_decay: 0.0001
+      batch_size: 64
+      epochs: 301
+      patience: 301
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          cleaning: chinese
+          max_length: 162
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+          cleaning: chinese
+          max_length: 162

@@ -1,0 +1,73 @@
+model:
+  name: BTIC
+  parameters:
+    text:
+      model_name: google-bert/bert-base-uncased
+      revision: 86b5e0934494bd15c9632b12f734a8a67f723594
+      freeze: false
+      output: tokens
+      mask_padding: true
+      max_length: 256
+    image:
+      architecture: resnet50
+      weights: IMAGENET1K_V1
+      image_size: 640
+      grid_size: 8
+      patch_batch_size: 64
+      center_crop: true
+      stem_maxpool: true
+    projection_dim: 1400
+    attention_heads: 8
+    transformer_layers: 6
+    feedforward_dim: 516
+    transformer_dropout: 0.1
+    pool_size: 32
+    dropout: 0.5
+    contrastive_weight: 0.2
+    neighbors: 5
+    reference_mode: time_free
+    headline_key: title
+    timestamp_key: timestamp
+    reference_chunk_size: 256
+  provenance:
+    paper: https://doi.org/10.1145/3459637.3482196
+    reference_code: https://github.com/WenjiaZh/BTIC/tree/291411fb951d8d740499de83ee6643bb1ea20686
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 100
+  batch_size: 8
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 1.0e-05
+  weight_decay: 0.0
+  optimizer: adam
+  optimizer_parameters: {}
+  parameter_groups: {}
+  weight_decay_exclude_bias_norm: false
+  patience: 15
+  device: auto
+  gradient_clip_norm: null
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+    training:
+      learning_rate: 3.0e-06
+  weibo21:
+    model:
+      parameters:
+        text:
+          model_name: google-bert/bert-base-chinese
+          revision: 8f23c25b06e129b6c986331a13d8d025a92cf0ea
+    training:
+      learning_rate: 3.0e-06

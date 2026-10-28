@@ -1,0 +1,100 @@
+model:
+  name: MIMoE
+  parameters:
+    text:
+      encoder_preset: bert
+      freeze: false
+      max_length: 197
+    image:
+      encoder_preset: mae
+      freeze: false
+      image_size: 224
+      minimum_size: 0
+      augment: false
+      center_crop: true
+      resize_size: 256
+      normalize: true
+    clip_text:
+      encoder_preset: clip
+      freeze: false
+      max_length: 77
+      normalize: false
+    clip_image:
+      encoder_preset: clip
+      freeze: false
+      normalize: false
+      square_resize: false
+    routing_dim: 768
+    hidden_dim: 64
+    clip_hidden_dim: 128
+    num_experts: 2
+    num_heads: 4
+    ffn_multiplier: 4
+    agreement_threshold: 0.3
+    semantic_threshold: 0.3
+    alpha: 1.0
+    beta: 0.1
+    router_z_weight: 0.01
+    balance_weight: 0.1
+    epsilon: 1.0e-08
+    adain_epsilon: 2.3e-08
+    positive_weight: 1.0
+    routing: hard
+  provenance:
+    paper: https://arxiv.org/abs/2501.12431v2
+    code: https://github.com/yliuaa/MIMoE-FND/tree/002e747829dffcb2925803bb617cd1f9dd2de20c
+training:
+  seeds:
+  - 0
+  - 42
+  - 2026
+  epochs: 50
+  batch_size: 24
+  eval_batch_size: 64
+  num_workers: 0
+  learning_rate: 3.0e-05
+  weight_decay: 0.01
+  optimizer: adamw
+  optimizer_parameters:
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+  parameter_groups:
+    interaction:
+      learning_rate: 0.0001
+  weight_decay_exclude_bias_norm: false
+  patience: 8
+  device: auto
+  gradient_clip_norm: 1.0
+  gradient_accumulation_steps: 1
+  precision: full
+  scheduler: null
+  stage_overrides: {}
+dataset_overrides:
+  weibo17:
+    model:
+      parameters:
+        clip_text:
+          max_length: 197
+        clip_hidden_dim: 256
+        alpha: 2.0
+        beta: 0.3
+    training:
+      learning_rate: 1.0e-05
+      parameter_groups:
+        interaction:
+          learning_rate: 1.0e-05
+  weibo21:
+    model:
+      parameters:
+        clip_text:
+          max_length: 197
+        clip_hidden_dim: 256
+        alpha: 2.0
+        beta: 0.7
+    training:
+      learning_rate: 1.0e-05
+      parameter_groups:
+        interaction:
+          learning_rate: 1.0e-05
